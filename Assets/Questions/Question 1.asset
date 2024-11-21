@@ -13,3 +13,9 @@ MonoBehaviour:
   m_Name: Question 1
   m_EditorClassIdentifier: 
   question: "\u0427\u0442\u043E \u0440\u0430\u0441\u0442\u0451\u0442 \u0432 \u043E\u0433\u043E\u0440\u043E\u0434\u0435? "
+  answers:
+  - "\u041B\u0443\u043A "
+  - "\u041F\u0438\u0441\u0442\u043E\u043B\u0435\u0442 "
+  - "\u041F\u0443\u043B\u0435\u043C\u0451\u0442 "
+  - "\u0420\u0430\u043A\u0435\u0442\u0430 \u0421\u0421-20 "
+  correctAnswerIndex: 0
