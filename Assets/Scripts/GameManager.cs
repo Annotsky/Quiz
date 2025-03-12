@@ -3,29 +3,29 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    Quiz quiz;
-    EndScreen endScreen;
+    private Quiz _quiz;
+    private EndScreen _endScreen;
 
 
-    void Awake()
+    private void Awake()
     {
-        quiz = FindFirstObjectByType<Quiz>();
-        endScreen = FindFirstObjectByType<EndScreen>();
+        _quiz = FindFirstObjectByType<Quiz>();
+        _endScreen = FindFirstObjectByType<EndScreen>();
     }
 
-    void Start()
+    private void Start()
     {
-        quiz.gameObject.SetActive(true);
-        endScreen.gameObject.SetActive(false);
+        _quiz.gameObject.SetActive(true);
+        _endScreen.gameObject.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
-        if (quiz.isComplete)
+        if (_quiz.isComplete)
         {
-            quiz.gameObject.SetActive(false);
-            endScreen.gameObject.SetActive(true);
-            endScreen.ShowFinalScore();
+            _quiz.gameObject.SetActive(false);
+            _endScreen.gameObject.SetActive(true);
+            _endScreen.ShowFinalScore();
         }
     }
 

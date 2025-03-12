@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eba8743a38fddb468e3439aa6217566, type: 3}
   m_Name: Question 14
   m_EditorClassIdentifier: 
-  question: "\u0427\u0442\u043E \u0432 \u0420\u043E\u0441\u0441\u0438\u0438 19 \u0432\u0435\u043A\u0430
-    \u0434\u0435\u043B\u0430\u043B\u0438 \u0432 \u0434\u043E\u0440\u0442\u0443\u0430\u0440\u0435? "
-  answers:
-  - "\u0415\u043B\u0438 "
-  - "\u0421\u043F\u0430\u043B\u0438 "
-  - "\u0415\u0437\u0434\u0438\u043B\u0438 \u0432\u0435\u0440\u0445\u043E\u043C "
-  - "\u041A\u0443\u043F\u0430\u043B\u0438\u0441\u044C "
-  correctAnswerIndex: 1
+  _question: Which operator is used for logical "AND"?
+  _answers:
+  - '&&'
+  - '||'
+  - '!'
+  - ==
+  _correctAnswerIndex: 0

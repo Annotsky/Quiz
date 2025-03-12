@@ -1,50 +1,49 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Collections;
+using TMPro;
 
 public class Quiz : MonoBehaviour
 {
     [Header("Questions")]
-    [SerializeField] TextMeshProUGUI questionText;
-    [SerializeField] List<QuestionSO> questions = new List<QuestionSO>();
-    QuestionSO currentQuestion;
+    [SerializeField] private TextMeshProUGUI questionText;
+    [SerializeField] private List<QuestionData> questions = new();
 
     [Header("Answers")]
     [SerializeField] GameObject[] answerButtons;
-    int correctAnswerIndex;
-    bool hasAnsweredEarly = true;
+    private int _correctAnswerIndex;
+    private bool _hasAnswered = true;
 
     [Header("Button Colors")]
-    [SerializeField] Sprite defaultAnswerSprite;
-    [SerializeField] Sprite correctAnswerSprite;
+    [SerializeField] private Sprite defaultAnswerSprite;
+    [SerializeField] private Sprite correctAnswerSprite;
 
     [Header("Timer")]
-    [SerializeField] Image timerImage;
-    Timer timer;
+    [SerializeField] private Image timerImage;
+    private Timer _timer;
 
     [Header("Scoring")]
-    [SerializeField] TextMeshProUGUI scoreText;
-    ScoreKeeper scoreKeeper;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    private Score _score;
 
     [Header("Progress Bar")]
     [SerializeField] Slider progressBar;
 
+    private QuestionData _currentQuestion;
     public bool isComplete;
 
-    void Awake()
+    private void Awake()
     {
-        timer = FindFirstObjectByType<Timer>();
-        scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
+        _timer = FindFirstObjectByType<Timer>();
+        _score = FindFirstObjectByType<Score>();
         progressBar.maxValue = questions.Count;
         progressBar.value = 0;
     }
 
-    private void LateUpdate() //лейт для тестинга
+    private void LateUpdate() //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     {
-        timerImage.fillAmount = timer.fillFraction;
-        if (timer.loadNextQuestion)
+        timerImage.fillAmount = _timer.fillFraction;
+        if (_timer.loadNextQuestion)
         {
             if (progressBar.value == progressBar.maxValue)
             {
@@ -52,11 +51,11 @@ public class Quiz : MonoBehaviour
                 return;
             }
 
-            hasAnsweredEarly = false;
+            _hasAnswered = false;
             GetNextQuestion();
-            timer.loadNextQuestion = false;
+            _timer.loadNextQuestion = false;
         }
-        else if (!hasAnsweredEarly && !timer.isAnsweringQuestion)
+        else if (!_hasAnswered && !_timer.isAnsweringQuestion)
         {
             DisplayAnswer(-1);
             SetButtonState(false);
@@ -65,35 +64,35 @@ public class Quiz : MonoBehaviour
 
     public void OnAnswerSelected(int index)
     {
-        hasAnsweredEarly = true;
+        _hasAnswered = true;
         DisplayAnswer(index);
         SetButtonState(false);
-        timer.CancelTimer();
-        scoreText.text = "Очки: " + scoreKeeper.CalculateScore() + "%";        
+        _timer.CancelTimer();
+        scoreText.text = "пїЅпїЅпїЅпїЅ: " + _score.CalculateScore() + "%";        
     }
 
-    void DisplayAnswer(int index)
+    private void DisplayAnswer(int index)
     {
         Image buttonImage;
 
-        if (index == currentQuestion.GetCorrectAnswerIndex())
+        if (index == _currentQuestion.CorrectAnswerIndex)
         {
-            questionText.text = "Правильно!";
+            questionText.text = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!";
             buttonImage = answerButtons[index].GetComponent<Image>();
             buttonImage.sprite = correctAnswerSprite;
-            scoreKeeper.IncrementCorrectAnswers();
+            _score.IncrementCorrectAnswers();
         }
         else
         {
-            correctAnswerIndex = currentQuestion.GetCorrectAnswerIndex();
-            string correctAnswer = currentQuestion.GetAnswer(correctAnswerIndex);
-            questionText.text = "Неправильно!\n Правильный ответ:\n" + correctAnswer;
-            buttonImage = answerButtons[correctAnswerIndex].GetComponent<Image>();
+            _correctAnswerIndex = _currentQuestion.CorrectAnswerIndex;
+            string correctAnswer = _currentQuestion.Answer(_correctAnswerIndex);
+            questionText.text = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!\n пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ:\n" + correctAnswer;
+            buttonImage = answerButtons[_correctAnswerIndex].GetComponent<Image>();
             buttonImage.sprite = correctAnswerSprite;
         }
     }
 
-    void GetNextQuestion()
+    private void GetNextQuestion()
     {
         if (questions.Count > 0)
         {
@@ -102,33 +101,33 @@ public class Quiz : MonoBehaviour
             GetRandomQuestion();
             DisplayQuestion();
             progressBar.value++;
-            scoreKeeper.IncrementQuestionsSeen();
+            _score.IncrementQuestionsSeen();
         }
     }
 
-    void GetRandomQuestion()
+    private void GetRandomQuestion()
     {
         int index = Random.Range(0, questions.Count);
-        currentQuestion = questions[index];
+        _currentQuestion = questions[index];
 
-        if (questions.Contains(currentQuestion))
+        if (questions.Contains(_currentQuestion))
         {
-            questions.Remove(currentQuestion);
+            questions.Remove(_currentQuestion);
         }
     }
 
-    void DisplayQuestion()
+    private void DisplayQuestion()
     {
-        questionText.text = currentQuestion.GetQuestion();
+        questionText.text = _currentQuestion.Question;
 
         for (int i = 0; i < answerButtons.Length; i++)
         {
             TextMeshProUGUI buttonText = answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = currentQuestion.GetAnswer(i);
+            buttonText.text = _currentQuestion.Answer(i);
         }
     }
 
-    void SetButtonState(bool state)
+    private void SetButtonState(bool state)
     {
         for (int i = 0; i < answerButtons.Length; i++)
         {
@@ -137,9 +136,9 @@ public class Quiz : MonoBehaviour
         }
     }
 
-    void SetDefaultButtonSprite()
+    private void SetDefaultButtonSprite()
     {
-        for (int i = 0; i < answerButtons.Length; i++)
+        for(int i = 0; i < answerButtons.Length; i++)
         {
             Image buttonImage = answerButtons[i].GetComponent<Image>();
             buttonImage.sprite = defaultAnswerSprite;

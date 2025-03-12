@@ -3,16 +3,16 @@ using TMPro;
 
 public class EndScreen : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI finalScoreText;
-    ScoreKeeper scoreKeeper;
+    [SerializeField] private TextMeshProUGUI _finalScoreText;
+    private Score _score;
 
-    void Awake()
+    private void Awake()
     {
-        scoreKeeper = FindFirstObjectByType<ScoreKeeper>();
+        _score = FindFirstObjectByType<Score>();
     }
 
     public void ShowFinalScore()
     {
-        finalScoreText.text = $"Поздравляем!\nРезультат: {scoreKeeper.CalculateScore()}%\nправильных ответов.";
+        _finalScoreText.text = $"Congratulations!\nYou have: {_score.CalculateScore()}%\ncorrect answers!";
     }
 }
