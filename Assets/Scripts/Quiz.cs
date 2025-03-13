@@ -4,58 +4,59 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Quiz : MonoBehaviour
-{
+{//переработать
     [Header("Questions")]
-    [SerializeField] private TextMeshProUGUI questionText;
-    [SerializeField] private List<QuestionData> questions = new();
+    [SerializeField] private TextMeshProUGUI _questionText;
+    [SerializeField] private List<QuestionData> _questions = new();
 
     [Header("Answers")]
-    [SerializeField] GameObject[] answerButtons;
-    private int _correctAnswerIndex;
-    private bool _hasAnswered = true;
-
+    [SerializeField] private GameObject[] _answerButtons;
+    
     [Header("Button Colors")]
-    [SerializeField] private Sprite defaultAnswerSprite;
-    [SerializeField] private Sprite correctAnswerSprite;
-
+    [SerializeField] private Sprite _defaultAnswerSprite;
+    [SerializeField] private Sprite _correctAnswerSprite;
+    
     [Header("Timer")]
-    [SerializeField] private Image timerImage;
-    private Timer _timer;
-
+    [SerializeField] private Image _timerImage;
+    
     [Header("Scoring")]
-    [SerializeField] private TextMeshProUGUI scoreText;
-    private Score _score;
+    [SerializeField] private TextMeshProUGUI _scoreText;
 
     [Header("Progress Bar")]
-    [SerializeField] Slider progressBar;
+    [SerializeField] Slider _progressBar;
 
+    private int _correctAnswerIndex;
+    private bool _hasAnswered = true;
     private QuestionData _currentQuestion;
-    public bool isComplete;
+    private Timer _timer;
+    private Score _score;
+
+    public bool IsComplete { get; private set; }
 
     private void Awake()
     {
         _timer = FindFirstObjectByType<Timer>();
         _score = FindFirstObjectByType<Score>();
-        progressBar.maxValue = questions.Count;
-        progressBar.value = 0;
+        _progressBar.maxValue = _questions.Count;
+        _progressBar.value = 0;
     }
 
-    private void LateUpdate() //���� ��� ��������
+    private void LateUpdate()
     {
-        timerImage.fillAmount = _timer.fillFraction;
-        if (_timer.loadNextQuestion)
+        _timerImage.fillAmount = _timer.FillFraction;
+        if (_timer.LoadNextQuestion)
         {
-            if (progressBar.value == progressBar.maxValue)
+            if (Mathf.Approximately(_progressBar.value, _progressBar.maxValue))
             {
-                isComplete = true;
+                IsComplete = true;
                 return;
             }
 
             _hasAnswered = false;
             GetNextQuestion();
-            _timer.loadNextQuestion = false;
+            _timer.LoadNextQuestion = false;
         }
-        else if (!_hasAnswered && !_timer.isAnsweringQuestion)
+        else if (!_hasAnswered && !_timer.IsAnsweringQuestion)
         {
             DisplayAnswer(-1);
             SetButtonState(false);
@@ -68,7 +69,7 @@ public class Quiz : MonoBehaviour
         DisplayAnswer(index);
         SetButtonState(false);
         _timer.CancelTimer();
-        scoreText.text = "����: " + _score.CalculateScore() + "%";        
+        _scoreText.text = "Score: " + _score.CalculateScore() + "%";        
     }
 
     private void DisplayAnswer(int index)
@@ -77,71 +78,71 @@ public class Quiz : MonoBehaviour
 
         if (index == _currentQuestion.CorrectAnswerIndex)
         {
-            questionText.text = "���������!";
-            buttonImage = answerButtons[index].GetComponent<Image>();
-            buttonImage.sprite = correctAnswerSprite;
+            _questionText.text = "Correct!";
+            buttonImage = _answerButtons[index].GetComponent<Image>();
+            buttonImage.sprite = _correctAnswerSprite;
             _score.IncrementCorrectAnswers();
         }
         else
         {
             _correctAnswerIndex = _currentQuestion.CorrectAnswerIndex;
             string correctAnswer = _currentQuestion.Answer(_correctAnswerIndex);
-            questionText.text = "�����������!\n ���������� �����:\n" + correctAnswer;
-            buttonImage = answerButtons[_correctAnswerIndex].GetComponent<Image>();
-            buttonImage.sprite = correctAnswerSprite;
+            _questionText.text = "Wrong!\n Correct answer is:\n" + correctAnswer;
+            buttonImage = _answerButtons[_correctAnswerIndex].GetComponent<Image>();
+            buttonImage.sprite = _correctAnswerSprite;
         }
     }
 
     private void GetNextQuestion()
     {
-        if (questions.Count > 0)
+        if (_questions.Count > 0)
         {
             SetButtonState(true);
             SetDefaultButtonSprite();
             GetRandomQuestion();
             DisplayQuestion();
-            progressBar.value++;
+            _progressBar.value++;
             _score.IncrementQuestionsSeen();
         }
     }
 
     private void GetRandomQuestion()
     {
-        int index = Random.Range(0, questions.Count);
-        _currentQuestion = questions[index];
+        int index = Random.Range(0, _questions.Count);
+        _currentQuestion = _questions[index];
 
-        if (questions.Contains(_currentQuestion))
+        if (_questions.Contains(_currentQuestion))
         {
-            questions.Remove(_currentQuestion);
+            _questions.Remove(_currentQuestion);
         }
     }
 
     private void DisplayQuestion()
     {
-        questionText.text = _currentQuestion.Question;
+        _questionText.text = _currentQuestion.Question;
 
-        for (int i = 0; i < answerButtons.Length; i++)
+        for (int i = 0; i < _answerButtons.Length; i++)
         {
-            TextMeshProUGUI buttonText = answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI buttonText = _answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
             buttonText.text = _currentQuestion.Answer(i);
         }
     }
 
     private void SetButtonState(bool state)
     {
-        for (int i = 0; i < answerButtons.Length; i++)
+        for (int i = 0; i < _answerButtons.Length; i++)
         {
-            Button button = answerButtons[i].GetComponent<Button>();
+            Button button = _answerButtons[i].GetComponent<Button>();
             button.interactable = state;
         }
     }
 
     private void SetDefaultButtonSprite()
     {
-        for(int i = 0; i < answerButtons.Length; i++)
+        for(int i = 0; i < _answerButtons.Length; i++)
         {
-            Image buttonImage = answerButtons[i].GetComponent<Image>();
-            buttonImage.sprite = defaultAnswerSprite;
+            Image buttonImage = _answerButtons[i].GetComponent<Image>();
+            buttonImage.sprite = _defaultAnswerSprite;
         }
     }
 }

@@ -4,6 +4,7 @@ using TMPro;
 public class EndScreen : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _finalScoreText;
+
     private Score _score;
 
     private void Awake()

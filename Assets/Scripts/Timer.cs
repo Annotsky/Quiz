@@ -2,52 +2,53 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    [SerializeField] float timeToCompleteQuestion = 30f;
-    [SerializeField] float timeToShowCorrectAnswer = 10f;
+    [SerializeField] private float _timeToCompleteQuestion;
+    [SerializeField] private float _timeToShowCorrectAnswer;
 
-    public bool loadNextQuestion;
-    public float fillFraction;
-    public bool isAnsweringQuestion;
+    //что-то сделать с публичными полями, используются тут и в Quiz
+    public bool LoadNextQuestion;
+    public float FillFraction;
+    public bool IsAnsweringQuestion;
 
-    float timerValue;
+    private float _timerValue;
 
-    void Update()
+    private void Update()
     {
         UpdateTimer();
     }
 
     public void CancelTimer()
     {
-        timerValue = 0;
+        _timerValue = 0;
     }
 
-    void UpdateTimer()
-    {
-        timerValue -= Time.deltaTime;
+    private void UpdateTimer()
+    {//повторяющийся код
+        _timerValue -= Time.deltaTime;
 
-        if (isAnsweringQuestion)
+        if (IsAnsweringQuestion)
         {
-            if (timerValue > 0)
+            if (_timerValue > 0)
             {
-                fillFraction = timerValue / timeToCompleteQuestion;
+                FillFraction = _timerValue / _timeToCompleteQuestion;
             }
             else
             {
-                isAnsweringQuestion = false;
-                timerValue = timeToShowCorrectAnswer;
+                IsAnsweringQuestion = false;
+                _timerValue = _timeToShowCorrectAnswer;
             }
         }
         else
         {
-            if (timerValue > 0)
+            if (_timerValue > 0)
             {
-                fillFraction = timerValue / timeToShowCorrectAnswer;
+                FillFraction = _timerValue / _timeToShowCorrectAnswer;
             }
             else
             {
-                isAnsweringQuestion = true;
-                timerValue = timeToCompleteQuestion;
-                loadNextQuestion = true;
+                IsAnsweringQuestion = true;
+                _timerValue = _timeToCompleteQuestion;
+                LoadNextQuestion = true;
             }
         }
     }
