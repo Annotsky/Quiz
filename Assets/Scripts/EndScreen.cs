@@ -4,13 +4,7 @@ using TMPro;
 public class EndScreen : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _finalScoreText;
-
-    private Score _score;
-
-    private void Awake()
-    {
-        _score = FindFirstObjectByType<Score>();
-    }
+    [SerializeField] private Score _score;
 
     public void ShowFinalScore()
     {

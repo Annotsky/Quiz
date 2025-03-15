@@ -32,11 +32,23 @@ public class Quiz : MonoBehaviour
     private int _correctAnswerIndex;
     private bool _hasAnswered = true;
     private QuestionData _currentQuestion;
+    
+    private Image[] _buttonImages;
 
     private void Awake()
     {
         _progressBar.maxValue = _questions.Count;
         _progressBar.value = 0;
+    }
+
+    private void Start()
+    {
+        _buttonImages = new Image[_answerButtons.Length];
+
+        for (int i = 0; i < _answerButtons.Length; i++)
+        {
+            _buttonImages[i] = _answerButtons[i].GetComponent<Image>();
+        }
     }
 
     private void LateUpdate()
@@ -77,7 +89,7 @@ public class Quiz : MonoBehaviour
         if (index == _currentQuestion.CorrectAnswerIndex)
         {
             _questionText.text = "Correct!";
-            buttonImage = _answerButtons[index].GetComponent<Image>();
+            buttonImage = _buttonImages[index];
             buttonImage.sprite = _correctAnswerSprite;
             _score.IncrementCorrectAnswers();
         }
@@ -86,7 +98,7 @@ public class Quiz : MonoBehaviour
             _correctAnswerIndex = _currentQuestion.CorrectAnswerIndex;
             string correctAnswer = _currentQuestion.Answer(_correctAnswerIndex);
             _questionText.text = "Wrong!\n Correct answer is:\n" + correctAnswer;
-            buttonImage = _answerButtons[_correctAnswerIndex].GetComponent<Image>();
+            buttonImage = _buttonImages[_correctAnswerIndex];
             buttonImage.sprite = _correctAnswerSprite;
         }
     }
@@ -139,8 +151,7 @@ public class Quiz : MonoBehaviour
     {
         for (int i = 0; i < _answerButtons.Length; i++)
         {
-            Image buttonImage = _answerButtons[i].GetComponent<Image>();
-            buttonImage.sprite = _defaultAnswerSprite;
+            _buttonImages[i].sprite = _defaultAnswerSprite;
         }
     }
 }

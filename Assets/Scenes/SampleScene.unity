@@ -680,6 +680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _finalScoreText: {fileID: 1940059686}
+  _score: {fileID: 381960244}
 --- !u!1 &333953938
 GameObject:
   m_ObjectHideFlags: 0
