@@ -5,11 +5,10 @@ public class Timer : MonoBehaviour
     [SerializeField] private float _timeToCompleteQuestion;
     [SerializeField] private float _timeToShowCorrectAnswer;
 
-    //что-то сделать с публичными полями, используются тут и в Quiz
-    public bool LoadNextQuestion;
-    public float FillFraction;
-    public bool IsAnsweringQuestion;
-
+    public bool LoadNextQuestion { get; private set; }
+    public bool IsAnsweringQuestion { get; private set; }
+    public float FillFraction { get; private set; }
+    
     private float _timerValue;
 
     private void Update()
@@ -22,32 +21,27 @@ public class Timer : MonoBehaviour
         _timerValue = 0;
     }
 
+    public void SetLoadAnsweringQuestion(bool value)
+    {
+        LoadNextQuestion = value;
+    }
+
     private void UpdateTimer()
-    {//повторяющийся код
+    {
         _timerValue -= Time.deltaTime;
 
-        if (IsAnsweringQuestion)
+        if (_timerValue > 0)
         {
-            if (_timerValue > 0)
-            {
-                FillFraction = _timerValue / _timeToCompleteQuestion;
-            }
-            else
-            {
-                IsAnsweringQuestion = false;
-                _timerValue = _timeToShowCorrectAnswer;
-            }
+            float totalTime = IsAnsweringQuestion ? _timeToCompleteQuestion : _timeToShowCorrectAnswer;
+            FillFraction = _timerValue / totalTime;
         }
         else
         {
-            if (_timerValue > 0)
+            IsAnsweringQuestion = !IsAnsweringQuestion;
+            _timerValue = IsAnsweringQuestion ? _timeToCompleteQuestion : _timeToShowCorrectAnswer;
+
+            if (IsAnsweringQuestion)
             {
-                FillFraction = _timerValue / _timeToShowCorrectAnswer;
-            }
-            else
-            {
-                IsAnsweringQuestion = true;
-                _timerValue = _timeToCompleteQuestion;
                 LoadNextQuestion = true;
             }
         }

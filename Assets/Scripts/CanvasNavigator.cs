@@ -29,4 +29,9 @@ public class CanvasNavigator : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
+    public void OnQuitGame()
+    {
+        Application.Quit();
+    }
 }

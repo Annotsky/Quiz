@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Quiz : MonoBehaviour
-{//переработать
+{//дорабатывать
     [Header("Questions")]
     [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private List<QuestionData> _questions = new();
@@ -15,28 +15,26 @@ public class Quiz : MonoBehaviour
     [Header("Button Colors")]
     [SerializeField] private Sprite _defaultAnswerSprite;
     [SerializeField] private Sprite _correctAnswerSprite;
-    
+
     [Header("Timer")]
+    [SerializeField] private Timer _timer;
     [SerializeField] private Image _timerImage;
     
     [Header("Scoring")]
+    [SerializeField] private Score _score;
     [SerializeField] private TextMeshProUGUI _scoreText;
 
     [Header("Progress Bar")]
-    [SerializeField] Slider _progressBar;
+    [SerializeField] private Slider _progressBar;
+    
+    public bool IsComplete { get; private set; }
 
     private int _correctAnswerIndex;
     private bool _hasAnswered = true;
     private QuestionData _currentQuestion;
-    private Timer _timer;
-    private Score _score;
-
-    public bool IsComplete { get; private set; }
 
     private void Awake()
     {
-        _timer = FindFirstObjectByType<Timer>();
-        _score = FindFirstObjectByType<Score>();
         _progressBar.maxValue = _questions.Count;
         _progressBar.value = 0;
     }
@@ -54,7 +52,7 @@ public class Quiz : MonoBehaviour
 
             _hasAnswered = false;
             GetNextQuestion();
-            _timer.LoadNextQuestion = false;
+            _timer.SetLoadAnsweringQuestion(false);
         }
         else if (!_hasAnswered && !_timer.IsAnsweringQuestion)
         {
@@ -69,7 +67,7 @@ public class Quiz : MonoBehaviour
         DisplayAnswer(index);
         SetButtonState(false);
         _timer.CancelTimer();
-        _scoreText.text = "Score: " + _score.CalculateScore() + "%";        
+        _scoreText.text = "Score: " + _score.CalculateScore() + "%";
     }
 
     private void DisplayAnswer(int index)
@@ -139,7 +137,7 @@ public class Quiz : MonoBehaviour
 
     private void SetDefaultButtonSprite()
     {
-        for(int i = 0; i < _answerButtons.Length; i++)
+        for (int i = 0; i < _answerButtons.Length; i++)
         {
             Image buttonImage = _answerButtons[i].GetComponent<Image>();
             buttonImage.sprite = _defaultAnswerSprite;
