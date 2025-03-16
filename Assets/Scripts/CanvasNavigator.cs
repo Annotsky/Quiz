@@ -4,12 +4,12 @@ using UnityEngine.SceneManagement;
 public class CanvasNavigator : MonoBehaviour
 {
     [SerializeField] private Quiz _quiz;
-    [SerializeField] private EndScreen _endScreen;
+    [SerializeField] private EndScreenResult endScreenResult;
 
     private void Start()
     {
         _quiz.gameObject.SetActive(true);
-        _endScreen.gameObject.SetActive(false);
+        endScreenResult.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -21,8 +21,8 @@ public class CanvasNavigator : MonoBehaviour
     {
         if (!_quiz.IsComplete) return;
         _quiz.gameObject.SetActive(false);
-        _endScreen.gameObject.SetActive(true);
-        _endScreen.ShowFinalScore();
+        endScreenResult.gameObject.SetActive(true);
+        endScreenResult.ShowFinalScore();
     }
 
     public void OnReplayLevel()

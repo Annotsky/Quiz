@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 
 public class Quiz : MonoBehaviour
-{//дорабатывать
+{
     [Header("Questions")]
     [SerializeField] private TextMeshProUGUI _questionText;
     [SerializeField] private List<QuestionData> _questions = new();
@@ -34,6 +34,8 @@ public class Quiz : MonoBehaviour
     private QuestionData _currentQuestion;
     
     private Image[] _buttonImages;
+    private Button[] _buttonComponents;
+    private TextMeshProUGUI[] _buttonTexts;
 
     private void Awake()
     {
@@ -43,11 +45,20 @@ public class Quiz : MonoBehaviour
 
     private void Start()
     {
+        CacheButtonComponents();
+    }
+
+    private void CacheButtonComponents()
+    {
         _buttonImages = new Image[_answerButtons.Length];
+        _buttonComponents = new Button[_answerButtons.Length];
+        _buttonTexts = new TextMeshProUGUI[_answerButtons.Length];
 
         for (int i = 0; i < _answerButtons.Length; i++)
         {
             _buttonImages[i] = _answerButtons[i].GetComponent<Image>();
+            _buttonComponents[i] = _answerButtons[i].GetComponent<Button>();
+            _buttonTexts[i] = _answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
         }
     }
 
@@ -133,8 +144,7 @@ public class Quiz : MonoBehaviour
 
         for (int i = 0; i < _answerButtons.Length; i++)
         {
-            TextMeshProUGUI buttonText = _answerButtons[i].GetComponentInChildren<TextMeshProUGUI>();
-            buttonText.text = _currentQuestion.Answer(i);
+            _buttonTexts[i].text = _currentQuestion.Answer(i);
         }
     }
 
@@ -142,8 +152,7 @@ public class Quiz : MonoBehaviour
     {
         for (int i = 0; i < _answerButtons.Length; i++)
         {
-            Button button = _answerButtons[i].GetComponent<Button>();
-            button.interactable = state;
+            _buttonComponents[i].interactable = state;
         }
     }
 

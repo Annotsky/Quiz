@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class EndScreen : MonoBehaviour
+public class EndScreenResult : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _finalScoreText;
     [SerializeField] private Score _score;
