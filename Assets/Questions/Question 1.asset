@@ -16,6 +16,6 @@ MonoBehaviour:
   _answers:
   - Update()
   - Start()
-  - Awake()
+  - OnDisable()
   - FixedUpdate()
   _correctAnswerIndex: 1

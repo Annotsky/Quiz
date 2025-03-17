@@ -2848,7 +2848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _quiz: {fileID: 1295231851}
-  _endScreen: {fileID: 270840983}
+  endScreenResult: {fileID: 270840983}
 --- !u!4 &1412226720
 Transform:
   m_ObjectHideFlags: 0
